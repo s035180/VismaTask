@@ -30,7 +30,7 @@ namespace TestForVisma
             filePath = "Book.json";
             if(!File.Exists(filePath))
             {
-                File.Create(filePath);
+                File.Create(filePath).Close();
             }
             jsonData = System.IO.File.ReadAllText(filePath);
             bookList = JsonConvert.DeserializeObject<List<Book>>(jsonData) ?? new List<Book>();
