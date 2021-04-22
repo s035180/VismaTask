@@ -8,10 +8,11 @@ namespace TestForVisma
         {
             Book book = new Book();
             book.loadBooks();
-            Console.WriteLine("Welcome, what would you like to do?");
+            Console.WriteLine("Welcome");
             while (true)
             {            
                 Console.WriteLine("In order to see commands write: !help");
+                Console.WriteLine("Enter a command to complete an action");
                 string answer;
                 answer = Console.ReadLine();
                 if(answer == "!help")
@@ -62,14 +63,36 @@ namespace TestForVisma
                     string name = Console.ReadLine();
                     Console.WriteLine("Enter book ID you want to take");
                     string bookid = Console.ReadLine();
-                    try
-                    {
-                        book.takeBook(Convert.ToInt32(bookid), name);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Something went wrong");
-                    }
+
+                        Console.WriteLine("Enter book return date: (yyyy,mm,dd)");
+                        string returnDate = Console.ReadLine();
+                        try
+                        {
+                             DateTime returning = Convert.ToDateTime(returnDate);
+                                DateTime now;
+                             if(DateTime.Now.Month + 2 > 12)
+                             {
+                                now = new DateTime(DateTime.Now.Year + 1, DateTime.Now.Month, DateTime.Now.Day);
+                             } else
+                             {
+                                now = new DateTime(DateTime.Now.Year, DateTime.Now.Month + 2, DateTime.Now.Day);
+                             }
+
+                        if (returning > now)
+                        {
+                            Console.WriteLine("You can only take book for 2 months max");
+                        }
+                        else
+                        {
+                            book.takeBook(Convert.ToInt32(bookid), name, returning);
+                        }
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Something went wrong");
+                        }
+
+
 
 
                 }
@@ -82,6 +105,7 @@ namespace TestForVisma
                     try
                     {
                         book.returnBook(Convert.ToInt32(bookid), name);
+                        book.loadBooks();
                     }
                     catch
                     {
@@ -100,39 +124,52 @@ namespace TestForVisma
                         Console.WriteLine("Enter 4 for language");
                         Console.WriteLine("Enter 5 for ISBN");
                         Console.WriteLine("Enter 6 for pubDate");
+                        Console.WriteLine("Enter 7 for available books");
+                        Console.WriteLine("Enter 8 for taken books");
                         string answer3 = Console.ReadLine();
                         int position = Convert.ToInt32(answer3);
-                        if(position > 6 || position <  1)
+                        if(position > 8 || position <  1)
                         {
-                            Console.WriteLine("Number between 1-5");
+                            Console.WriteLine("Number between 1-8");
                         } else
                         {
-                            Console.WriteLine("Enter searching value: ");
-                            if (position == 6)
-                                Console.WriteLine("yyyy, mm, dd");
-                            string answer4 = Console.ReadLine();
-                            try
+                            if (position == 7)
                             {
-                                if (position == 6)
-                                {
-                                    DateTime date = new DateTime();
-                                    date = Convert.ToDateTime(answer4);
-                                    book.filtering(answer4, true, position);
-                                }
-                                else
-                                {
-                                    book.filtering(answer4, false, position);
-                                }
+                                book.showBooks(book.getBookList(), false);
                             }
-                            catch
+                            else if (position == 8)
                             {
-                                Console.WriteLine("Something went wrong");
+                                book.takenBooks();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Enter searching value: ");
+                                if (position == 6)
+                                    Console.WriteLine("yyyy, mm, dd");
+                                string answer4 = Console.ReadLine();
+                                try
+                                {
+                                    if (position == 6)
+                                    {
+                                        DateTime date = new DateTime();
+                                        date = Convert.ToDateTime(answer4);
+                                        book.filtering(answer4, true, position);
+                                    }
+                                    else
+                                    {
+                                        book.filtering(answer4, false, position);
+                                    }
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Something went wrong");
+                                }
                             }
                         }
                     }
                     else if (answer2 == "no")
                     {
-                        book.showBooks(book.getBookList(), false);
+                        book.showAllBooks();
                     }
                     else Console.WriteLine("Bad answer");
                 }
