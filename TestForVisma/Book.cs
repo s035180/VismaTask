@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace TestForVisma
 {
-    class Book
+    public class Book
     {
         public string name { get; set; }
         public string author { get; set; }
